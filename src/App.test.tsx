@@ -22,19 +22,20 @@ describe('App Integration with Login', () => {
     // Fill in the login form
     const emailInput = screen.getByLabelText(/email/i);
     const passwordInput = screen.getByLabelText(/password/i);
-    const submitButton = screen.getByRole('button', { name: /login/i });
+    const submitButton = screen.getByRole('button', { name: /sign in/i });
 
     await user.type(emailInput, 'admin@example.com');
     await user.type(passwordInput, 'password123');
     await user.click(submitButton);
 
     // Check loading state
-    expect(screen.getByText('Logging in...')).toBeInTheDocument();
+    expect(screen.getByText('Signing in...')).toBeInTheDocument();
 
     // Wait for login to complete and welcome message to appear
     await waitFor(
       () => {
-        expect(screen.getByText(/welcome, admin@example.com!/i)).toBeInTheDocument();
+        expect(screen.getByText(/welcome!/i)).toBeInTheDocument();
+        expect(screen.getByText('admin@example.com')).toBeInTheDocument();
       },
       { timeout: 3000 }
     );
@@ -49,7 +50,7 @@ describe('App Integration with Login', () => {
 
     const emailInput = screen.getByLabelText(/email/i);
     const passwordInput = screen.getByLabelText(/password/i);
-    const submitButton = screen.getByRole('button', { name: /login/i });
+    const submitButton = screen.getByRole('button', { name: /sign in/i });
 
     await user.type(emailInput, 'wrong@example.com');
     await user.type(passwordInput, 'wrongpassword');
@@ -64,7 +65,7 @@ describe('App Integration with Login', () => {
     );
 
     // Should still be on login page
-    expect(screen.getByRole('button', { name: /login/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /sign in/i })).toBeInTheDocument();
   });
 
   it('allows logout and returns to login form', async () => {
@@ -74,7 +75,7 @@ describe('App Integration with Login', () => {
     // Login first
     const emailInput = screen.getByLabelText(/email/i);
     const passwordInput = screen.getByLabelText(/password/i);
-    const submitButton = screen.getByRole('button', { name: /login/i });
+    const submitButton = screen.getByRole('button', { name: /sign in/i });
 
     await user.type(emailInput, 'admin@example.com');
     await user.type(passwordInput, 'password123');
@@ -83,7 +84,8 @@ describe('App Integration with Login', () => {
     // Wait for login to complete
     await waitFor(
       () => {
-        expect(screen.getByText(/welcome, admin@example.com!/i)).toBeInTheDocument();
+        expect(screen.getByText(/welcome!/i)).toBeInTheDocument();
+        expect(screen.getByText('admin@example.com')).toBeInTheDocument();
       },
       { timeout: 3000 }
     );
@@ -96,7 +98,7 @@ describe('App Integration with Login', () => {
     await waitFor(() => {
       expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
       expect(screen.getByLabelText(/password/i)).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: /login/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /sign in/i })).toBeInTheDocument();
     });
   });
 });

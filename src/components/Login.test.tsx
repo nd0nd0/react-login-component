@@ -12,10 +12,10 @@ describe('Login Component', () => {
 
   it('renders login form with all required elements', () => {
     render(<Login onSubmit={mockOnSubmit} />);
-    expect(screen.getByRole('heading', { name: 'Login' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /welcome back/i })).toBeInTheDocument();
     expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/password/i)).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /login/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /sign in/i })).toBeInTheDocument();
   });
 
   it('updates input values when user types', async () => {
@@ -36,7 +36,7 @@ describe('Login Component', () => {
     const user = userEvent.setup();
     render(<Login onSubmit={mockOnSubmit} />);
 
-    const submitButton = screen.getByRole('button', { name: /login/i });
+    const submitButton = screen.getByRole('button', { name: /sign in/i });
     await user.click(submitButton);
 
     await waitFor(() => {
@@ -52,7 +52,7 @@ describe('Login Component', () => {
     render(<Login onSubmit={mockOnSubmit} />);
 
     const emailInput = screen.getByLabelText(/email/i);
-    const submitButton = screen.getByRole('button', { name: /login/i });
+    const submitButton = screen.getByRole('button', { name: /sign in/i });
 
     await user.type(emailInput, 'invalid-email');
     await user.click(submitButton);
@@ -69,7 +69,7 @@ describe('Login Component', () => {
     render(<Login onSubmit={mockOnSubmit} />);
 
     const passwordInput = screen.getByLabelText(/password/i);
-    const submitButton = screen.getByRole('button', { name: /login/i });
+    const submitButton = screen.getByRole('button', { name: /sign in/i });
 
     await user.type(passwordInput, '12345');
     await user.click(submitButton);
@@ -86,7 +86,7 @@ describe('Login Component', () => {
     render(<Login onSubmit={mockOnSubmit} />);
 
     const emailInput = screen.getByLabelText(/email/i);
-    const submitButton = screen.getByRole('button', { name: /login/i });
+    const submitButton = screen.getByRole('button', { name: /sign in/i });
 
     // Trigger validation error
     await user.click(submitButton);
@@ -108,7 +108,7 @@ describe('Login Component', () => {
 
     const emailInput = screen.getByLabelText(/email/i);
     const passwordInput = screen.getByLabelText(/password/i);
-    const submitButton = screen.getByRole('button', { name: /login/i });
+    const submitButton = screen.getByRole('button', { name: /sign in/i });
 
     await user.type(emailInput, 'test@example.com');
     await user.type(passwordInput, 'password123');
@@ -127,12 +127,12 @@ describe('Login Component', () => {
 
     const emailInput = screen.getByLabelText(/email/i);
     const passwordInput = screen.getByLabelText(/password/i);
-    const submitButton = screen.getByRole('button', { name: /logging in/i });
+    const submitButton = screen.getByRole('button', { name: /signing in/i });
 
     expect(emailInput).toBeDisabled();
     expect(passwordInput).toBeDisabled();
     expect(submitButton).toBeDisabled();
-    expect(screen.getByText('Logging in...')).toBeInTheDocument();
+    expect(screen.getByText('Signing in...')).toBeInTheDocument();
   });
 
   it('displays error message when error prop is provided', () => {
@@ -146,7 +146,7 @@ describe('Login Component', () => {
     const user = userEvent.setup();
     render(<Login onSubmit={mockOnSubmit} isLoading={true} />);
 
-    const submitButton = screen.getByRole('button', { name: /logging in/i });
+    const submitButton = screen.getByRole('button', { name: /signing in/i });
     await user.click(submitButton);
 
     expect(mockOnSubmit).not.toHaveBeenCalled();
@@ -192,7 +192,7 @@ describe('Login Component', () => {
 
     const emailInput = screen.getByLabelText(/email/i);
     const passwordInput = screen.getByLabelText(/password/i);
-    const submitButton = screen.getByRole('button', { name: /login/i });
+    const submitButton = screen.getByRole('button', { name: /sign in/i });
 
     // Test valid email formats
     const validEmails = [
@@ -224,12 +224,13 @@ describe('Login Component', () => {
     render(<Login onSubmit={mockOnSubmit} />);
 
     const emailInput = screen.getByLabelText(/email/i);
-    const submitButton = screen.getByRole('button', { name: /login/i });
+    const submitButton = screen.getByRole('button', { name: /sign in/i });
 
     await user.click(submitButton);
 
     await waitFor(() => {
-      expect(emailInput).toHaveClass('error');
+      expect(emailInput).toHaveClass('border-red-500');
+      expect(emailInput).toHaveClass('bg-red-900/20');
     });
   });
 });
