@@ -1,7 +1,8 @@
 @import 'tailwindcss';
 
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  /* Body font: Inter */
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -33,10 +34,12 @@ body {
   min-height: 100vh;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+/* Headings use a unique display font */
+h1, h2, h3, h4, h5, h6 {
+  font-family: Outfit, Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  letter-spacing: -0.01em;
 }
+
 
 button {
   border-radius: 8px;
@@ -132,4 +135,52 @@ button:focus-visible {
   border-top: 2px solid currentColor;
   border-radius: 50%;
   animation: spin 1s linear infinite;
+}
+
+/* Splash screen animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.splash-content {
+  animation: fadeIn 0.6s ease-out;
+}
+
+.splash-card {
+  animation: slideUp 0.8s ease-out 0.2s backwards;
+}
+
+.sparkle {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.character-float {
+  animation: float 3s ease-in-out infinite;
 }
