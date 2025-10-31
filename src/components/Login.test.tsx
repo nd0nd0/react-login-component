@@ -12,7 +12,6 @@ describe('Login Component', () => {
 
   it('renders login form with all required elements', () => {
     render(<Login onSubmit={mockOnSubmit} />);
-
     expect(screen.getByRole('heading', { name: 'Login' })).toBeInTheDocument();
     expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/password/i)).toBeInTheDocument();
