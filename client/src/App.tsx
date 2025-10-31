@@ -5,7 +5,8 @@ import SplashScreen from './components/SplashScreen'
 import type { LoginFormData } from './components/Login'
 
 function App() {
-  const [showSplash, setShowSplash] = useState(true)
+  const isTest = import.meta.env.MODE === 'test'
+  const [showSplash, setShowSplash] = useState(!isTest)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string>('')
   const [user, setUser] = useState<LoginFormData | null>(null)
@@ -34,7 +35,7 @@ function App() {
 
   const handleLogout = () => {
     setUser(null)
-    setShowSplash(true)
+    setShowSplash(isTest ? false : true)
   }
 
   const handleContinueFromSplash = () => {

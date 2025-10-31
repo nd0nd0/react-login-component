@@ -8,8 +8,9 @@ describe('SplashScreen Component', () => {
     const mockOnContinue = vi.fn();
     render(<SplashScreen onContinue={mockOnContinue} />);
 
-    // Check for heading
-    expect(screen.getByRole('heading', { name: /earn rewards for every step you take/i })).toBeInTheDocument();
+  // Check for heading (allowing for line breaks between words)
+  const heading = screen.getByRole('heading', { level: 1 });
+  expect(heading).toHaveTextContent(/earn rewards for\s*every step you take/i);
     
     // Check for description text
     expect(screen.getByText(/more than tracking transform/i)).toBeInTheDocument();

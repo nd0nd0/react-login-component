@@ -186,7 +186,7 @@ export const Login: React.FC<LoginProps> = ({
               type="email"
               className={`w-full px-4 py-3.5 border rounded-xl text-gray-900 placeholder-slate-400 bg-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-400 ${
                 errors.email
-                  ? "border-red-400 bg-red-50"
+                  ? "border-red-500 bg-red-900/20"
                   : "border-slate-300 hover:border-slate-400"
               } ${isLoading ? "bg-slate-100 cursor-not-allowed" : ""}`}
               disabled={isLoading}
@@ -237,7 +237,7 @@ export const Login: React.FC<LoginProps> = ({
               type="password"
               className={`w-full px-4 py-3.5 border rounded-xl text-gray-900 placeholder-slate-400 bg-white transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-400 ${
                 errors.password
-                  ? "border-red-400 bg-red-50"
+                  ? "border-red-500 bg-red-900/20"
                   : "border-slate-300 hover:border-slate-400"
               } ${isLoading ? "bg-slate-100 cursor-not-allowed" : ""}`}
               disabled={isLoading}

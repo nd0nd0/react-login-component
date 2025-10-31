@@ -1,91 +1,45 @@
-## Vite + React Login with Splash Screen
+## Vite + React Login + Splash (client) • Express + SQLite (server)
 
-A small, modern login flow built with React + TypeScript. It ships with:
-- Animated splash screen (Framer Motion)
-- Accessible login form (React Hook Form + Zod)
-- Tailwind CSS styling (v4)
-- Tests with Vitest + React Testing Library
+Tiny full-stack starter with an animated splash, accessible login, and a TypeScript Express API.
 
-### Features
-- Splash screen with orange gradient hero and subtle sparkles
-- Login screen visually matched to the splash (light form section, orange CTA)
-- Zod-powered validation: valid email + min 6 character password
-- Loading/disabled state on submit, clear error messages
-- Inter (body) and Outfit (headings) fonts
+Highlights
+- Splash screen (Framer Motion), matching login UI (Tailwind v4)
+- Form validation with React Hook Form + Zod
+- Server: Express + better-sqlite3 + bcryptjs (TypeScript)
+- Tests: Vitest + React Testing Library
+- Fonts: Inter (body) + Outfit (headings)
 
-## Project structure
-
-```
-src/
-  App.tsx                      # Splash → Login → Authenticated flow
-  main.tsx                     # Entry
-  index.css                    # Base styles + fonts
-  components/
-    SplashScreen.tsx           # Animated hero section
-    Login.tsx                  # RHF + Zod login form (styled like splash)
-    Login.test.tsx             # Unit tests
-  test/
-    setup.ts                   # Test environment
-    test-utils.tsx             # RTL helpers
-  App.test.tsx                 # Integration tests
-```
-
-## Quick start
-
-Requirements: Node 18+, pnpm
-
+Quick start (Node 18+, pnpm)
 ```bash
+# from the repo root (pnpm workspace: client + server)
 pnpm install
-pnpm dev
+pnpm dev   # runs client and server together
 ```
 
-The server prints the local URL (often http://localhost:5173 or 5174).
+Dev URLs
+- Client: http://localhost:5173
+- Server: http://localhost:3001
 
-## Test commands
-
+Build & run (server will serve the built client)
 ```bash
-pnpm test         # run once
-pnpm test --watch # watch mode
-pnpm test:ui      # Vitest UI
+pnpm build
+pnpm start
 ```
 
-## Usage
-
-The app boots to the splash screen. Tap “Log in” to view the form.
-
-```tsx
-// Pass your submit handler; show loading and optional error
-<Login onSubmit={handleLogin} isLoading={isLoading} error={error} />
+Tests
+```bash
+pnpm test              # run client tests
+pnpm -C client test:ui # optional Vitest UI
 ```
 
-### Demo credentials
-Email: admin@example.com  
-Password: password123
+API
+- POST /api/auth/login → { ok, user } (email + password)
+- GET  /api/health      → { ok, env }
 
-## API (types)
+Demo credentials
+- Email: admin@example.com
+- Password: password123
 
-```ts
-interface LoginFormData { email: string; password: string }
-interface LoginProps {
-  onSubmit: (data: LoginFormData) => void
-  isLoading?: boolean
-  error?: string
-}
-```
-
-## Validation
-- Email must be valid
-- Password min length: 6
-- Errors clear as the user types (RHF + Zod resolver)
-
-## Tech
-React 19, TypeScript, Vite, Tailwind v4, React Hook Form, Zod, Framer Motion, Vitest, React Testing Library.
-
-## Notes
-- Fonts: Inter (body), Outfit (headings)
-- Tailwind v4 utilities (e.g., `bg-linear-to-b`)
-- Replace the simulated API in `App.tsx` with your own service
-
----
-
-MIT-like; use freely for learning and projects.
+Notes
+- Monorepo via pnpm workspace (client + server)
+- Tailwind v4 utilities (e.g., bg-linear-to-b)
