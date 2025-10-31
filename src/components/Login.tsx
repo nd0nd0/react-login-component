@@ -1,4 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useDevToolsDebug, usePerformanceMonitor } from '../utils/devtools';
 
 export interface LoginFormData {
@@ -12,90 +15,70 @@ export interface LoginProps {
   error?: string;
 }
 
+// Zod schema for form validation
+const loginSchema = z.object({
+  email: z
+    .string()
+    .min(1, 'Email is required')
+    .email('Please enter a valid email address'),
+  password: z
+    .string()
+    .min(1, 'Password is required')
+    .min(6, 'Password must be at least 6 characters long'),
+});
+
 export const Login: React.FC<LoginProps> = ({ onSubmit, isLoading = false, error }) => {
-  const [formData, setFormData] = useState<LoginFormData>({
-    email: '',
-    password: '',
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    watch,
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+    mode: 'onSubmit',
+    reValidateMode: 'onChange',
+    defaultValues: { email: '', password: '' },
   });
 
-  const [fieldErrors, setFieldErrors] = useState<Partial<LoginFormData>>({});
-
   // DevTools debugging hooks (only active in development)
-  useDevToolsDebug('Login', { formData, fieldErrors, isLoading, error });
+  const formValues = watch();
+  useDevToolsDebug('Login', { formValues, errors, isLoading, error });
   usePerformanceMonitor('Login');
-
-  const validateForm = (): boolean => {
-    const errors: Partial<LoginFormData> = {};
-
-    if (!formData.email) {
-      errors.email = 'Email is required';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      errors.email = 'Please enter a valid email address';
-    }
-
-    if (!formData.password) {
-      errors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      errors.password = 'Password must be at least 6 characters long';
-    }
-
-    setFieldErrors(errors);
-    return Object.keys(errors).length === 0;
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value,
-    }));
-    
-    // Clear field error when user starts typing
-    if (fieldErrors[name as keyof LoginFormData]) {
-      setFieldErrors(prev => ({
-        ...prev,
-        [name]: undefined,
-      }));
-    }
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (validateForm()) {
-      onSubmit(formData);
-    }
+  
+  const onValidSubmit = (data: LoginFormData) => {
+    if (isLoading) return;
+    onSubmit(data);
   };
 
   return (
-    <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
+    <div className="flex items-center justify-center min-h-screen p-4 bg-slate-900">
       <div className="w-full max-w-sm">
         <form 
-          className="bg-slate-800 border border-slate-700 shadow-2xl rounded-2xl p-8 space-y-6" 
-          onSubmit={handleSubmit} 
+          className="p-8 space-y-6 border shadow-2xl bg-slate-800 border-slate-700 rounded-2xl" 
+          onSubmit={handleSubmit(onValidSubmit)} 
           noValidate
         >
           {/* Header */}
-          <div className="text-center space-y-2">
-            <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+          <div className="space-y-2 text-center">
+            <div className="flex items-center justify-center w-16 h-16 mx-auto mb-6 bg-blue-600 shadow-lg rounded-2xl">
               <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
               </svg>
             </div>
-            <h1 className="text-2xl font-light text-white tracking-tight">Welcome back</h1>
-            <p className="text-slate-400 text-sm">Sign in to continue</p>
+            <h1 className="text-2xl font-light tracking-tight text-white">Welcome back</h1>
+            <p className="text-sm text-slate-400">Sign in to continue</p>
           </div>
         
           {/* Error Message */}
           {error && (
-            <div className="p-4 bg-red-900/50 border border-red-800 rounded-xl" role="alert">
+            <div className="p-4 border border-red-800 bg-red-900/50 rounded-xl" role="alert">
               <div className="flex items-center space-x-3">
                 <div className="shrink-0">
-                  <svg className="h-5 w-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
                   </svg>
                 </div>
-                <p className="text-sm text-red-300 font-medium">{error}</p>
+                <p className="text-sm font-medium text-red-300">{error}</p>
               </div>
             </div>
           )}
@@ -110,26 +93,24 @@ export const Login: React.FC<LoginProps> = ({ onSubmit, isLoading = false, error
             </label>
             <input
               id="email"
-              name="email"
               type="email"
-              value={formData.email}
-              onChange={handleInputChange}
               className={`w-full px-4 py-3.5 border rounded-xl text-white placeholder-slate-500 bg-slate-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-400 ${
-                fieldErrors.email 
+                errors.email 
                   ? 'border-red-500 bg-red-900/20' 
                   : 'border-slate-600 hover:border-slate-500'
               } ${isLoading ? 'bg-slate-600 cursor-not-allowed' : ''}`}
               disabled={isLoading}
               autoComplete="email"
               placeholder="you@example.com"
-              aria-describedby={fieldErrors.email ? 'email-error' : undefined}
+              aria-describedby={errors.email ? 'email-error' : undefined}
+              {...register('email')}
             />
-            {fieldErrors.email && (
-              <p id="email-error" className="text-xs text-red-400 flex items-center space-x-1" role="alert">
+            {errors.email && (
+              <p id="email-error" className="flex items-center space-x-1 text-xs text-red-400" role="alert">
                 <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <span>{fieldErrors.email}</span>
+                <span>{errors.email.message}</span>
               </p>
             )}
           </div>
@@ -144,26 +125,24 @@ export const Login: React.FC<LoginProps> = ({ onSubmit, isLoading = false, error
             </label>
             <input
               id="password"
-              name="password"
               type="password"
-              value={formData.password}
-              onChange={handleInputChange}
               className={`w-full px-4 py-3.5 border rounded-xl text-white placeholder-slate-500 bg-slate-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-400 ${
-                fieldErrors.password 
+                errors.password 
                   ? 'border-red-500 bg-red-900/20' 
                   : 'border-slate-600 hover:border-slate-500'
               } ${isLoading ? 'bg-slate-600 cursor-not-allowed' : ''}`}
               disabled={isLoading}
               autoComplete="current-password"
               placeholder="••••••••"
-              aria-describedby={fieldErrors.password ? 'password-error' : undefined}
+              aria-describedby={errors.password ? 'password-error' : undefined}
+              {...register('password')}
             />
-            {fieldErrors.password && (
-              <p id="password-error" className="text-xs text-red-400 flex items-center space-x-1" role="alert">
+            {errors.password && (
+              <p id="password-error" className="flex items-center space-x-1 text-xs text-red-400" role="alert">
                 <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <span>{fieldErrors.password}</span>
+                <span>{errors.password.message}</span>
               </p>
             )}
           </div>
@@ -182,7 +161,7 @@ export const Login: React.FC<LoginProps> = ({ onSubmit, isLoading = false, error
             {isLoading ? (
               <div className="flex items-center justify-center space-x-2">
                 <svg 
-                  className="animate-spin h-5 w-5 text-white" 
+                  className="w-5 h-5 text-white animate-spin" 
                   fill="none" 
                   viewBox="0 0 24 24"
                   aria-hidden="true"
@@ -203,7 +182,7 @@ export const Login: React.FC<LoginProps> = ({ onSubmit, isLoading = false, error
               <p className="text-xs text-slate-400">
                 Demo credentials
               </p>
-              <p className="text-xs text-slate-300 font-mono mt-1">
+              <p className="mt-1 font-mono text-xs text-slate-300">
                 admin@example.com • password123
               </p>
             </div>
