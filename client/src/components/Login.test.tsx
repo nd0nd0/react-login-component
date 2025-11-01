@@ -1,7 +1,8 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import Login from './Login';
+import { renderWithProviders } from '../test/test-utils';
 
 describe('Login Component', () => {
   const mockOnSubmit = vi.fn();
@@ -11,7 +12,7 @@ describe('Login Component', () => {
   });
 
   it('renders login form with all required elements', () => {
-    render(<Login onSubmit={mockOnSubmit} />);
+    renderWithProviders(<Login onSubmit={mockOnSubmit} />);
     expect(screen.getByRole('heading', { name: /welcome back/i })).toBeInTheDocument();
     expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/password/i)).toBeInTheDocument();
@@ -20,7 +21,7 @@ describe('Login Component', () => {
 
   it('updates input values when user types', async () => {
     const user = userEvent.setup();
-    render(<Login onSubmit={mockOnSubmit} />);
+    renderWithProviders(<Login onSubmit={mockOnSubmit} />);
 
     const emailInput = screen.getByLabelText(/email/i);
     const passwordInput = screen.getByLabelText(/password/i);
@@ -34,7 +35,7 @@ describe('Login Component', () => {
 
   it('shows validation errors for empty fields', async () => {
     const user = userEvent.setup();
-    render(<Login onSubmit={mockOnSubmit} />);
+    renderWithProviders(<Login onSubmit={mockOnSubmit} />);
 
     const submitButton = screen.getByRole('button', { name: /sign in/i });
     await user.click(submitButton);
@@ -49,7 +50,7 @@ describe('Login Component', () => {
 
   it('shows validation error for invalid email format', async () => {
     const user = userEvent.setup();
-    render(<Login onSubmit={mockOnSubmit} />);
+    renderWithProviders(<Login onSubmit={mockOnSubmit} />);
 
     const emailInput = screen.getByLabelText(/email/i);
     const submitButton = screen.getByRole('button', { name: /sign in/i });
@@ -66,7 +67,7 @@ describe('Login Component', () => {
 
   it('shows validation error for password shorter than 6 characters', async () => {
     const user = userEvent.setup();
-    render(<Login onSubmit={mockOnSubmit} />);
+    renderWithProviders(<Login onSubmit={mockOnSubmit} />);
 
     const passwordInput = screen.getByLabelText(/password/i);
     const submitButton = screen.getByRole('button', { name: /sign in/i });
@@ -83,7 +84,7 @@ describe('Login Component', () => {
 
   it('clears field errors when user starts typing', async () => {
     const user = userEvent.setup();
-    render(<Login onSubmit={mockOnSubmit} />);
+    renderWithProviders(<Login onSubmit={mockOnSubmit} />);
 
     const emailInput = screen.getByLabelText(/email/i);
     const submitButton = screen.getByRole('button', { name: /sign in/i });
@@ -104,7 +105,7 @@ describe('Login Component', () => {
 
   it('submits form with valid data', async () => {
     const user = userEvent.setup();
-    render(<Login onSubmit={mockOnSubmit} />);
+    renderWithProviders(<Login onSubmit={mockOnSubmit} />);
 
     const emailInput = screen.getByLabelText(/email/i);
     const passwordInput = screen.getByLabelText(/password/i);
@@ -123,7 +124,7 @@ describe('Login Component', () => {
   });
 
   it('disables form inputs and button when loading', () => {
-    render(<Login onSubmit={mockOnSubmit} isLoading={true} />);
+    renderWithProviders(<Login onSubmit={mockOnSubmit} isLoading={true} />);
 
     const emailInput = screen.getByLabelText(/email/i);
     const passwordInput = screen.getByLabelText(/password/i);
@@ -137,14 +138,14 @@ describe('Login Component', () => {
 
   it('displays error message when error prop is provided', () => {
     const errorMessage = 'Invalid credentials';
-    render(<Login onSubmit={mockOnSubmit} error={errorMessage} />);
+    renderWithProviders(<Login onSubmit={mockOnSubmit} error={errorMessage} />);
 
     expect(screen.getByRole('alert')).toHaveTextContent(errorMessage);
   });
 
   it('prevents form submission when loading', async () => {
     const user = userEvent.setup();
-    render(<Login onSubmit={mockOnSubmit} isLoading={true} />);
+    renderWithProviders(<Login onSubmit={mockOnSubmit} isLoading={true} />);
 
     const submitButton = screen.getByRole('button', { name: /signing in/i });
     await user.click(submitButton);
@@ -153,7 +154,7 @@ describe('Login Component', () => {
   });
 
   it('has proper accessibility attributes', () => {
-    render(<Login onSubmit={mockOnSubmit} error="Test error" />);
+    renderWithProviders(<Login onSubmit={mockOnSubmit} error="Test error" />);
 
     const emailInput = screen.getByLabelText(/email/i);
     const passwordInput = screen.getByLabelText(/password/i);
@@ -169,7 +170,7 @@ describe('Login Component', () => {
 
   it('handles form submission with Enter key', async () => {
     const user = userEvent.setup();
-    render(<Login onSubmit={mockOnSubmit} />);
+    renderWithProviders(<Login onSubmit={mockOnSubmit} />);
 
     const emailInput = screen.getByLabelText(/email/i);
     const passwordInput = screen.getByLabelText(/password/i);
@@ -188,7 +189,7 @@ describe('Login Component', () => {
 
   it('validates email format correctly', async () => {
     const user = userEvent.setup();
-    render(<Login onSubmit={mockOnSubmit} />);
+    renderWithProviders(<Login onSubmit={mockOnSubmit} />);
 
     const emailInput = screen.getByLabelText(/email/i);
     const passwordInput = screen.getByLabelText(/password/i);
@@ -221,7 +222,7 @@ describe('Login Component', () => {
 
   it('shows appropriate CSS classes for error states', async () => {
     const user = userEvent.setup();
-    render(<Login onSubmit={mockOnSubmit} />);
+    renderWithProviders(<Login onSubmit={mockOnSubmit} />);
 
     const emailInput = screen.getByLabelText(/email/i);
     const submitButton = screen.getByRole('button', { name: /sign in/i });
