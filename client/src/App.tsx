@@ -3,38 +3,41 @@ import { motion } from 'framer-motion'
 import Login from './components/Login'
 import SplashScreen from './components/SplashScreen'
 import type { LoginFormData } from './components/Login'
+import { useLoginMutation } from './hooks/useLoginMutation'
+
+interface User {
+  id: number;
+  email: string;
+  name: string;
+}
 
 function App() {
   const isTest = import.meta.env.MODE === 'test'
   const [showSplash, setShowSplash] = useState(!isTest)
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string>('')
-  const [user, setUser] = useState<LoginFormData | null>(null)
+  const [user, setUser] = useState<User | null>(null)
+  
+  const loginMutation = useLoginMutation()
 
   const handleLogin = async (data: LoginFormData) => {
-    setIsLoading(true)
-    setError('')
-
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000))
+      const response = await loginMutation.mutateAsync({
+        email: data.email,
+        password: data.password,
+      })
       
-      // Simulate login validation
-      if (data.email === 'admin@example.com' && data.password === 'password123') {
-        setUser(data)
-        console.log('Login successful:', data)
-      } else {
-        setError('Invalid email or password')
+      if (response.ok && response.user) {
+        setUser(response.user)
+        console.log('Login successful:', response.user)
       }
     } catch (err) {
-      setError('An error occurred during login')
-    } finally {
-      setIsLoading(false)
+      // Error is handled by the mutation and will be available via loginMutation.error
+      console.error('Login failed:', err)
     }
   }
 
   const handleLogout = () => {
     setUser(null)
+    loginMutation.reset()
     setShowSplash(isTest ? false : true)
   }
 
@@ -102,7 +105,11 @@ function App() {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
     >
-      <Login onSubmit={handleLogin} isLoading={isLoading} error={error} />
+      <Login 
+        onSubmit={handleLogin} 
+        isLoading={loginMutation.isPending} 
+        error={loginMutation.error?.message || ''} 
+      />
     </motion.div>
   )
 }

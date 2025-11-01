@@ -5,6 +5,7 @@ Tiny full-stack starter with an animated splash, accessible login, and a TypeScr
 Highlights
 - Splash screen (Framer Motion), matching login UI (Tailwind v4)
 - Form validation with React Hook Form + Zod
+- API integration with TanStack Query (React Query) for server state
 - Server: Express + better-sqlite3 + bcryptjs (TypeScript)
 - Tests: Vitest + React Testing Library
 - Fonts: Inter (body) + Outfit (headings)
@@ -43,3 +44,5 @@ Demo credentials
 Notes
 - Monorepo via pnpm workspace (client + server)
 - Tailwind v4 utilities (e.g., bg-linear-to-b)
+- TanStack Query handles login mutations with automatic loading/error states
+- Vite dev proxy forwards /api requests to the Express server (port 3001)
