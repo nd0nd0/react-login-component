@@ -2,16 +2,6 @@
 
 Tiny full-stack starter that demonstrates an accessible login/register flow and a TypeScript Express API using TanStack Query for client-server communication.
 
-Highlights
-- Polished login + register UI (Tailwind v4)
-- Registration flow added: create account with name, email, and password
-- Password visibility toggle for password and confirm password fields
-- Form validation with React Hook Form + Zod
-- API integration with TanStack Query (React Query) for server state
-- Server: Express + better-sqlite3 + bcryptjs (TypeScript)
-- Tests: Vitest + React Testing Library
-- Fonts: Inter (body) + Outfit (headings)
-
 Quick start (Node 18+, pnpm)
 ```bash
 # from the repo root (pnpm workspace: client + server)
