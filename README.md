@@ -1,6 +1,6 @@
-## Vite + React Login + Splash (client) • Express + SQLite (server)
+## react-auth-flow — Vite + React Auth (client) • Express + SQLite (server)
 
-Tiny full-stack starter with an animated splash, accessible login, and a TypeScript Express API.
+Tiny full-stack starter that demonstrates an animated splash, accessible login, and a TypeScript Express API using TanStack Query for client-server communication.
 
 Highlights
 - Splash screen (Framer Motion), matching login UI (Tailwind v4)
