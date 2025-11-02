@@ -65,6 +65,7 @@ export const Login: React.FC<LoginProps> = ({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
+      className="bg-white"
     >
       {/* Top hero to match Splash */}
       <motion.div
@@ -232,15 +233,15 @@ export const Login: React.FC<LoginProps> = ({
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none focus:text-gray-700 transition-colors"
+                className="absolute text-gray-500 transition-colors -translate-y-1/2 mini-btn right-3 top-1/2 hover:text-gray-700 focus:outline-none focus:text-gray-700"
                 disabled={isLoading}
                  aria-label={showPassword ? "Hide" : "Show"}
                  aria-pressed={showPassword}
               >
                 {showPassword ? (
-                  <FiEyeOff className="w-5 h-5" />
+                  <FiEyeOff className="w-3 h-3" />
                 ) : (
-                  <FiEye className="w-5 h-5" />
+                  <FiEye className="w-3 h-3" />
                 )}
               </button>
             </div>

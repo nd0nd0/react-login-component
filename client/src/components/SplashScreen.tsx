@@ -3,9 +3,10 @@ import { motion } from "framer-motion";
 
 export interface SplashScreenProps {
   onContinue: () => void;
+  onCreateAccount?: () => void;
 }
 
-export const SplashScreen: React.FC<SplashScreenProps> = ({ onContinue }) => {
+export const SplashScreen: React.FC<SplashScreenProps> = ({ onContinue, onCreateAccount }) => {
   return (
     <motion.div className="max-h-screen overflow-hidden bg-white">
       <motion.div
@@ -192,6 +193,21 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onContinue }) => {
             >
               Log in
             </motion.button>
+
+            {/* Create account button (optional) */}
+            {onCreateAccount && (
+              <motion.button
+                onClick={onCreateAccount}
+                className="w-full px-6 py-4 mt-3 font-semibold text-orange-600 transition-all duration-200 ease-in-out shadow bg-orange-50 rounded-xl focus:outline-none focus:ring-4 focus:ring-orange-500/20 hover:bg-orange-100"
+                initial={{ y: 20, opacity: 0, scale: 0.9 }}
+                animate={{ y: 0, opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, delay: 1.05 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Create account
+              </motion.button>
+            )}
           </motion.div>
        
       </motion.div>

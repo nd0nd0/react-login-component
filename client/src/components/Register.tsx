@@ -88,6 +88,7 @@ export const Register: React.FC<RegisterProps> = ({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
+      className="bg-white"
     >
       {/* Top hero to match Login */}
       <motion.div
@@ -286,9 +287,9 @@ export const Register: React.FC<RegisterProps> = ({
                 aria-pressed={showPasswords}
               >
                 {showPasswords ? (
-                  <FiEyeOff className="w-5 h-5" />
+                  <FiEyeOff className="w-3 h-3" />
                 ) : (
-                  <FiEye className="w-5 h-5" />
+                  <FiEye className="w-3 h-3" />
                 )}
               </button>
             </div>
@@ -343,9 +344,9 @@ export const Register: React.FC<RegisterProps> = ({
                 aria-pressed={showPasswords}
               >
                 {showPasswords ? (
-                  <FiEyeOff className="w-5 h-5" />
+                  <FiEyeOff className="w-3 h-3" />
                 ) : (
-                  <FiEye className="w-5 h-5" />
+                  <FiEye className="w-3 h-3" />
                 )}
               </button>
             </div>
