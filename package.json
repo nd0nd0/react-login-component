@@ -7,6 +7,7 @@
     "dev": "pnpm -r --parallel run dev",
     "build": "pnpm -r build",
     "start": "pnpm --filter ./server start",
-    "test": "pnpm --filter ./client test"
+    "test": "pnpm --filter ./client test",
+    "test:ui": "pnpm --filter ./client test:ui"
   }
 }
