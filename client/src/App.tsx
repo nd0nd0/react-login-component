@@ -1,9 +1,12 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import Login from './components/Login'
+import Register from './components/Register'
 import SplashScreen from './components/SplashScreen'
 import type { LoginFormData } from './components/Login'
+import type { RegisterFormData } from './components/Register'
 import { useLoginMutation } from './hooks/useLoginMutation'
+import { useRegisterMutation } from './hooks/useRegisterMutation'
 
 interface User {
   id: number;
@@ -11,12 +14,16 @@ interface User {
   name: string;
 }
 
+type AuthView = 'login' | 'register';
+
 function App() {
   const isTest = import.meta.env.MODE === 'test'
   const [showSplash, setShowSplash] = useState(!isTest)
   const [user, setUser] = useState<User | null>(null)
+  const [authView, setAuthView] = useState<AuthView>('login')
   
   const loginMutation = useLoginMutation()
+  const registerMutation = useRegisterMutation()
 
   const handleLogin = async (data: LoginFormData) => {
     try {
@@ -35,10 +42,40 @@ function App() {
     }
   }
 
+  const handleRegister = async (data: Omit<RegisterFormData, 'confirmPassword'>) => {
+    try {
+      const response = await registerMutation.mutateAsync({
+        name: data.name,
+        email: data.email,
+        password: data.password,
+      })
+      
+      if (response.ok && response.user) {
+        setUser(response.user)
+        console.log('Registration successful:', response.user)
+      }
+    } catch (err) {
+      // Error is handled by the mutation and will be available via registerMutation.error
+      console.error('Registration failed:', err)
+    }
+  }
+
   const handleLogout = () => {
     setUser(null)
     loginMutation.reset()
+    registerMutation.reset()
+    setAuthView('login')
     setShowSplash(isTest ? false : true)
+  }
+
+  const handleNavigateToRegister = () => {
+    setAuthView('register')
+    loginMutation.reset()
+  }
+
+  const handleNavigateToLogin = () => {
+    setAuthView('login')
+    registerMutation.reset()
   }
 
   const handleContinueFromSplash = () => {
@@ -100,16 +137,26 @@ function App() {
 
   return (
     <motion.div
-      className="max-h-screen bg-white"
+      className="bg-white "
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
     >
-      <Login 
-        onSubmit={handleLogin} 
-        isLoading={loginMutation.isPending} 
-        error={loginMutation.error?.message || ''} 
-      />
+      {authView === 'login' ? (
+        <Login 
+          onSubmit={handleLogin}
+          onNavigateToRegister={handleNavigateToRegister}
+          isLoading={loginMutation.isPending} 
+          error={loginMutation.error?.message || ''} 
+        />
+      ) : (
+        <Register
+          onSubmit={handleRegister}
+          onNavigateToLogin={handleNavigateToLogin}
+          isLoading={registerMutation.isPending}
+          error={registerMutation.error?.message || ''}
+        />
+      )}
     </motion.div>
   )
 }

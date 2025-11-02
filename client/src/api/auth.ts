@@ -13,6 +13,22 @@ export interface LoginResponse {
   error?: string;
 }
 
+export interface RegisterRequest {
+  name: string;
+  email: string;
+  password: string;
+}
+
+export interface RegisterResponse {
+  ok: boolean;
+  user?: {
+    id: number;
+    email: string;
+    name: string;
+  };
+  error?: string;
+}
+
 export async function loginUser(credentials: LoginRequest): Promise<LoginResponse> {
   const response = await fetch('/api/auth/login', {
     method: 'POST',
@@ -29,4 +45,22 @@ export async function loginUser(credentials: LoginRequest): Promise<LoginRespons
   }
 
   return data;
+}
+
+export async function registerUser(data: RegisterRequest): Promise<RegisterResponse> {
+  const response = await fetch('/api/auth/register', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
+
+  const responseData = await response.json();
+
+  if (!response.ok) {
+    throw new Error(responseData.error || 'Registration failed');
+  }
+
+  return responseData;
 }
